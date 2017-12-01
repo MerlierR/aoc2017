@@ -1,5 +1,7 @@
-# running scripts
-```node day1 9121212199```
+Start of running ```npm install```
 
-# tests
+# running scripts
+See ```node day1 -h```
+
+# running tests
 ```npm test```

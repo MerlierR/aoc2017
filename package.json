@@ -14,5 +14,8 @@
   "engines": {
     "node": "8.9.1",
     "npm": "5.5.1"
+  },
+  "dependencies": {
+    "commander": "^2.12.2"
   }
 }

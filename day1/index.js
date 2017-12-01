@@ -1,11 +1,16 @@
 const captcha = require('./captcha');
-const question = require('../tools/question');
+const program = require('commander');
 
 (async function () {
-    const input = process.argv.slice(2)[0] || await question('Captcha to solve: ');
+    program
+        .usage('input [options]')
+        .option('-s, --step <n>', 'captcha step (default: half of the input)', parseInt)
+        .parse(process.argv);
 
-    console.log(`Solving captcha for "${input}"`);
-    console.log(`Result is "${captcha(input)}"`);
+    const input = program.args[0];
+    const step = program.step;
+
+    console.log(captcha(input.toString(), step));
 
     process.exit(0);
 }());
