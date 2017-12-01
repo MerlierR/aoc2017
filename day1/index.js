@@ -10,7 +10,7 @@ const program = require('commander');
     const input = program.args[0];
     const step = program.step;
 
-    console.log(captcha(input.toString(), step));
+    console.log(captcha(input, step));
 
     process.exit(0);
 }());
