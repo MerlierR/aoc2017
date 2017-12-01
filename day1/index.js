@@ -1,16 +1,12 @@
 const captcha = require('./captcha');
 const program = require('commander');
 
-(async function () {
-    program
-        .usage('input [options]')
-        .option('-s, --step <n>', 'captcha step (default: half of the input)', parseInt)
-        .parse(process.argv);
+program
+    .usage('input [options]')
+    .option('-s, --step <n>', 'captcha step (default: half of the input)', parseInt)
+    .parse(process.argv);
 
-    const input = program.args[0];
-    const step = program.step;
+const input = program.args[0];
+const step = program.step;
 
-    console.log(captcha(input, step));
-
-    process.exit(0);
-}());
+console.log(captcha(input, step));
