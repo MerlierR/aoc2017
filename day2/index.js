@@ -1,14 +1,23 @@
 const path = require('path');
-const fileChecksum = require('./fileChecksum');
+const fileOperation = require('./fileOperation');
 const program = require('commander');
 
 program
     .usage('path-to-file')
+    .option('-c, --checksum', 'checksum calculation')
+    .option('-e, --evenly-divisible-values', 'evenly divisible values calculation')
     .parse(process.argv);
 
 const fileName = program.args[0];
+let opration;
+if(program.checksum) {
+    operation = require('./checksum').checksumRow;
+} else {
+    operation = require('./evenlyDivisibleValues').evenlyDivisibleValuesRow
+}
 
 (async function () {
-    console.log(await fileChecksum(path.join(process.cwd(), fileName)));
+    const location = path.join(process.cwd(), fileName);
+    console.log(await fileOperation(location, operation));
     process.exit(0);
 }());
