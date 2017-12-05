@@ -5,7 +5,7 @@ const program = require('commander');
 program
     .usage('path-to-file')
     .option('-c, --checksum', 'checksum calculation')
-    .option('-e, --evenly-divisible-values', 'evenly divisible values calculation')
+    .option('-e, --evenly-divisible-values', 'evenly divisible values calculation (default)')
     .parse(process.argv);
 
 const fileName = program.args[0];
