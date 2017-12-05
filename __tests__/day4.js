@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { isValid, isValidFile } = require('../day4/passphrase');
+const { isValid, isValidFile, anagramWordValidation } = require('../day4/passphrase');
 
 describe('Day 4: Passphrases', () => {
     describe('Part 1', () => {
@@ -20,5 +20,17 @@ describe('Day 4: Passphrases', () => {
             expect(result.numberOfPhrases).toBe(3);
             expect(result.numberOfValidPhrases).toBe(2);
         });
+    });
+
+    describe('Part 2', () => {
+        [
+            { phrase: 'abcde fghij', valid: true },
+            { phrase: 'abcde xyz ecdab', valid: false },
+            { phrase: 'a ab abc abd abf abj', valid: true },
+            { phrase: 'iiii oiii ooii oooi oooo', valid: true },
+            { phrase: 'oiii ioii iioi iiio', valid: false }
+        ].forEach((entry) => it(`Can check the anagram validity (${entry.valid}) of "${entry.phrase}"`, () => {
+            expect(isValid(entry.phrase, anagramWordValidation)).toBe(entry.valid);
+        }));
     });
 });
