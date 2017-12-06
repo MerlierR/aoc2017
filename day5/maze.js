@@ -12,7 +12,7 @@ function threeOrMoreOffsetRule(input) {
     return +1;
 }
 
-function solveMaze(/**number[]*/ puzzle, offsetRule = plusOneOffsetRule) {
+function solveMaze(/**number[]*/ puzzle, offsetRule) {
     let steps = 0;
     let index = 0;
     let maze = puzzle;
