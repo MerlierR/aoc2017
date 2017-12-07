@@ -16,4 +16,14 @@ describe('Day 7', () => {
         expect(tower.name).toBe('tknk');
     });
 
+    it('can find the unbalanced tower', () => {
+        const filePath = path.join(__dirname, 'day7.txt');
+        const input = fs.readFileSync(filePath, 'utf8').split('\n');
+        const tower = Tower.fromConfig(input);
+
+        const correction = tower.findIncorrectDiskAndCorrection();
+
+        expect(correction.disk.name).toBe('ugml');
+        expect(correction.weight).toBe(60);
+    });
 });

@@ -14,6 +14,70 @@ class Tower {
         this.subTowers = subTowers;
     }
 
+    getFullWeight() {
+        return this.weight + this.subTowers.reduce((fw, st) => fw + st.getFullWeight(), 0);
+    }
+
+    hasCorrectBalance() {
+        let correct = true;
+
+        let i = 0;
+        let weightToCheck;
+        while (correct && i < this.subTowers.length) {
+            if (!weightToCheck) {
+                weightToCheck = this.weight + this.subTowers[i].getFullWeight();
+            } else {
+                correct = correct && weightToCheck === (this.weight + this.subTowers[i].getFullWeight());
+            }
+
+            i += 1;
+        }
+
+        return correct;
+    }
+
+    findUnbalancedSubTower() {
+        if (this.hasCorrectBalance()) {
+            return null;
+        }
+
+        const unbalancedSubTower = this.subTowers.find((st) => !st.hasCorrectBalance());
+        if (unbalancedSubTower) {
+            return unbalancedSubTower.findUnbalancedSubTower();
+        } else {
+            return this;
+        }
+    }
+
+    findIncorrectDiskAndCorrection() {
+        const unbalanced = this.findUnbalancedSubTower();
+        if (unbalanced.subTowers.length === 2) throw new Error('Should not happen');
+
+        const subsByFullWeight = unbalanced.subTowers.reduce((acc, st) => {
+            const fw = st.getFullWeight();
+            if (!acc[fw]) acc[fw] = [];
+
+            acc[fw].push(st);
+
+            return acc;
+        }, {});
+
+        let fullWeightCounts = Object.values(subsByFullWeight).map((subs) => subs.length);
+
+        const maxCount = Math.max(...fullWeightCounts);
+        const minCount = Math.min(...fullWeightCounts);
+
+        const correctWeight = Object.keys(subsByFullWeight).find((weight) => subsByFullWeight[weight].length === maxCount);
+        const wrongWeight = Object.keys(subsByFullWeight).find((weight) => subsByFullWeight[weight].length === minCount);
+        const delta = correctWeight - wrongWeight;
+
+        const wrongNode = subsByFullWeight[wrongWeight][0];
+
+        return {
+            disk: wrongNode,
+            weight: wrongNode.weight + delta
+        };
+    }
 }
 
 Tower.fromConfig = function (/**string[]*/ inputs) {
@@ -55,7 +119,7 @@ Tower.fromConfig = function (/**string[]*/ inputs) {
 
         return {
             name,
-            weight: weightString.substring(1, weightString.length - 1),
+            weight: parseInt(weightString.substring(1, weightString.length - 1), 10),
             subTowerNames
         };
     }
