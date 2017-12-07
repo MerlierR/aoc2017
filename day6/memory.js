@@ -3,6 +3,7 @@ class Memory {
     constructor(/**number[]*/ banks) {
         this.banks = banks;
         this.knownConfigurations = {};
+        this.hashes = [];
     }
 
     reallocate() {
@@ -14,6 +15,14 @@ class Memory {
         }
 
         return i;
+    }
+
+    getCyclesInInfiniteLoopAfterReallocation() {
+        const hashTableSize = this.hashes.length;
+        const repeatHash = this.hashes[this.hashes.length - 1];
+        const firstSameHashIndex = this.hashes.findIndex((hash) => hash === repeatHash);
+
+        return hashTableSize - 1 - firstSameHashIndex;
     }
 
     getMaxBlockSizeIndex() {
@@ -35,6 +44,7 @@ class Memory {
 
     isKnownConfiguration() {
         const hash = this.hash();
+        this.hashes.push(hash);
 
         if (!this.knownConfigurations[hash]) {
             this.knownConfigurations[hash] = true;

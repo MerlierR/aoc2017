@@ -15,4 +15,4 @@ const memoryConfig = fs
     .map((input) => parseInt(input, 10));
 
 const memory = new Memory(memoryConfig);
-console.log(memory.reallocate());
+console.log(memory.reallocate(), memory.getCyclesInInfiniteLoopAfterReallocation());
