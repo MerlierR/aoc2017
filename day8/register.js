@@ -1,3 +1,5 @@
+let maxVal = 0;
+
 function parseInstructionSet(data) {
     const lines = data.split('\n');
     const rules = lines.map(parseRule);
@@ -8,6 +10,8 @@ function parseInstructionSet(data) {
         if (condition(vars)) {
             vars[name] = operation(vars[name]);
         }
+
+        if (vars[name] > maxVal) maxVal = vars[name];
     });
 
     return vars;
@@ -47,4 +51,8 @@ function findLargestVal(vars) {
     return Math.max(...Object.values(vars));
 }
 
-module.exports = { parseInstructionSet, findLargestVal };
+function getLargestValDuringProcess() {
+    return maxVal;
+}
+
+module.exports = { parseInstructionSet, findLargestVal, getLargestValDuringProcess };
