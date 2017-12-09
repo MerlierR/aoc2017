@@ -13,6 +13,25 @@ class Content extends HasScore {
         super(0);
         this.content = content;
     }
+
+    getGarbageCount() {
+        if (!this.content) return 0;
+
+        const length = this.content.length;
+        let result = 0;
+        let i = 0;
+
+        while (i < length) {
+            const char = this.content[i];
+            if (char === '!') i += 2;
+            else {
+                result += 1;
+                i += 1;
+            }
+        }
+
+        return result;
+    }
 }
 
 class Stream extends HasScore {
@@ -24,6 +43,10 @@ class Stream extends HasScore {
 
     getTotalScore() {
         return this.score + (this.content || []).reduce((acc, content) => acc + content.getTotalScore(), 0);
+    }
+
+    getGarbageCount() {
+        return (this.content || []).reduce((acc, content) => acc + content.getGarbageCount(), 0);
     }
 }
 
@@ -47,7 +70,7 @@ Stream.parse = function (input, parentScore = 0) {
         } else if (char === '<') {
             // Start of content
             const closingIndex = findClosingContentIndex(i);
-            results.push(new Content(input.slice(i, closingIndex + 1)));
+            results.push(new Content(input.slice(i + 1, closingIndex)));
 
             i = closingIndex + 1;
         } else if (char === ',') {

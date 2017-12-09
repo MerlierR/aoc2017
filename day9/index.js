@@ -11,4 +11,4 @@ const fileName = program.args[0];
 const data = fs.readFileSync(path.join(process.cwd(), fileName), 'utf8');
 
 const stream = Stream.parse(data)[0];
-console.log(stream.getTotalScore());
+console.log(stream.getTotalScore(), stream.getGarbageCount());
