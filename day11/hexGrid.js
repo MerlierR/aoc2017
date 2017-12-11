@@ -56,6 +56,18 @@ class Cell {
 
 function parseSteps(/**string*/ input) {
     const steps = input.split(',').map(Direction.findByDirection);
+    let maxDistance = 0;
 
-    return steps.reduce((result, direction) => result.goTo(direction), new Cell(0, 0));
+    const cell = steps.reduce((result, direction) => {
+        const nextStep = result.goTo(direction);
+        const nextStepDistance = nextStep.distance();
+        if (nextStepDistance > maxDistance) maxDistance = nextStepDistance;
+        return nextStep;
+    }, new Cell(0, 0));
+
+    return {
+        cell,
+        maxDistance
+    };
+
 }

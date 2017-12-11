@@ -8,7 +8,7 @@ describe('Day 11: Hex Ed', () => {
         { input: 'ne,ne,s,s', steps: 2 },
         { input: 'se,sw,se,sw,sw', steps: 3 }
     ].forEach((entry) => it(`can calculate the steps (${entry.steps}) for "${entry.input}"`, () => {
-        const cell = parseSteps(entry.input);
+        const { cell } = parseSteps(entry.input);
         expect(cell.distance()).toBe(entry.steps);
     }));
 

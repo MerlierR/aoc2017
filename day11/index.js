@@ -9,6 +9,6 @@ program
 
 const fileName = program.args[0];
 const data = fs.readFileSync(path.join(process.cwd(), fileName), 'utf8');
-const cell = parseSteps(data);
+const { cell, maxDistance } = parseSteps(data);
 
-console.log(cell.distance());
+console.log(cell.distance(), maxDistance);
