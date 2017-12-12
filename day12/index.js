@@ -11,4 +11,4 @@ const fileName = program.args[0];
 const data = fs.readFileSync(path.join(process.cwd(), fileName), 'utf8');
 const nodeList = parseInput(data);
 
-console.log(nodeList.countConnectionsTo(0));
+console.log(nodeList.countConnectionsTo(0), nodeList.countGroups());

@@ -12,4 +12,14 @@ describe('Day 12: Digital Plumber', () => {
 
         expect(nodeList.countConnectionsTo(0)).toBe(6);
     });
+
+    it('can count the number of groups', () => {
+        const file = path.join(__dirname, 'day12.input.txt');
+        expect(fs.existsSync(file)).toBe(true);
+
+        const input = fs.readFileSync(file, 'utf8');
+        const nodeList = parseInput(input);
+
+        expect(nodeList.countGroups()).toBe(2);
+    });
 });

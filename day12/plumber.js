@@ -22,6 +22,33 @@ class NodeList {
             return count;
         }, 0);
     }
+
+    countGroups() {
+        const groups = [[0]];
+
+        Object.keys(this.nodes).map((key) => this.nodes[key]).forEach((node) => {
+            let i = 0;
+            let addedToGroup = false;
+            const l = groups.length;
+
+            while (!addedToGroup && i < l) {
+                const group = groups[i];
+
+                if (group.includes[node.pid]) {
+                    addedToGroup = true;
+                } else if (node.hasConnection(group[0], this)) {
+                    group.push(node.pid);
+                    addedToGroup = true;
+                }
+
+                i += 1;
+            }
+
+            if (!addedToGroup) groups.push([node.pid]);
+        });
+
+        return groups.length;
+    }
 }
 
 class Node {
