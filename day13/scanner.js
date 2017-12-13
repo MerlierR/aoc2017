@@ -35,18 +35,38 @@ function parseLine(/**string*/ line) {
     );
 }
 
-function walk(/**Layer[]*/ scanner) {
-    return scanner.reduce((totalSeverity, layer, index) => {
-        if (layer && layer.positionAtTick(index) === 0) {
-            totalSeverity += layer.range * index;
+function walk(/**Layer[]*/ scanner, delay = 0, fullDamage = true) {
+    let index = 0;
+    let length = scanner.length;
+    let severity = 0;
+    let caught = false;
+
+    while ((!caught || fullDamage) && index < length) {
+        const layer = scanner[index];
+        if (layer && layer.positionAtTick(index + delay) === 0) {
+            caught = true;
+            severity += layer.range * index;
         }
 
-        return totalSeverity;
-    }, 0);
+        index++;
+    }
+
+    return { severity, caught };
+}
+
+function findMinimalDelay(/**Layer[]*/ scanner) {
+    let delay = 0;
+
+    while (walk(scanner, delay, false).caught) {
+        delay += 1;
+    }
+
+    return delay;
 }
 
 module.exports = {
     Layer,
     parseInput,
-    walk
+    walk,
+    findMinimalDelay
 };
