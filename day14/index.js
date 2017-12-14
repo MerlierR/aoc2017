@@ -1,3 +1,5 @@
-const { count, createGrid } = require('./defragment');
+const { count, createGrid, countRegions } = require('./defragment');
 
-console.log(count(createGrid('vbqugkhl')));
+let grid = createGrid('vbqugkhl');
+console.log(count(grid));
+console.log(countRegions(grid));
