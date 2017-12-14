@@ -8,7 +8,7 @@ function parseInputAsCharList(data) {
     return data.split('').map((c) => c.charCodeAt());
 }
 
-function hash(/**number[]*/ input, /**number*/ rounds = 64, /**number*/ listSize = 256, suffix = SUFFIX) {
+function hashInput(/**number[]*/ input, /**number*/ rounds = 64, /**number*/ listSize = 256, suffix = SUFFIX) {
     let list = [...new Array(listSize).keys()];
     let skipSize = 0;
     let index = 0;
@@ -56,7 +56,8 @@ function hashToString(/**number[]*/ input) {
 }
 
 module.exports = {
-    hash,
+    hash: (/**string*/ input) => hashInput(parseInputAsCharList(input)).result,
+    hashInput,
     calculateDenseHash,
     hashToString,
     parseInputAsNumberList,

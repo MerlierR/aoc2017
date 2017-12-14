@@ -1,8 +1,8 @@
-const { hash, parseInputAsCharList, parseInputAsNumberList, calculateDenseHash, hashToString } = require('../day10/knotHash');
+const { hash, hashInput, parseInputAsCharList, parseInputAsNumberList, calculateDenseHash, hashToString } = require('../day10/knotHash');
 
 describe('Day 10', () => {
     it('can hash', () => {
-        expect(hash([3, 4, 1, 5], 1, 5, []).sparseHash).toEqual([3, 4, 2, 1, 0]);
+        expect(hashInput([3, 4, 1, 5], 1, 5, []).sparseHash).toEqual([3, 4, 2, 1, 0]);
     });
 
     it('can parse the input as a number list', () => {
@@ -31,6 +31,7 @@ describe('Day 10', () => {
         { input: '1,2,3', expectedResult: '3efbe78a8d82f29979031a4aa0b16a9d' },
         { input: '1,2,4', expectedResult: '63960835bcdc130f0b66d7ff4f6a5a8e' }
     ].forEach((entry) => it(`Can calculate the hash (${entry.expectedResult}) for "${entry.input}"`, () => {
-        expect(hash(parseInputAsCharList(entry.input)).result).toBe(entry.expectedResult);
+        expect(hashInput(parseInputAsCharList(entry.input)).result).toBe(entry.expectedResult);
+        expect(hash(entry.input)).toBe(entry.expectedResult);
     }));
 });
