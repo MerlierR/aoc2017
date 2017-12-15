@@ -1,4 +1,4 @@
-const { solveMaze, plusOneOffsetRule, threeOrMoreOffsetRule } = require('../day5/maze');
+const { solveMaze, plusOneOffsetRule, threeOrMoreOffsetRule } = require('../day05/maze');
 
 describe('Day 5: Maze', () => {
     describe('Part 1: plus 1 offset rule', () => {

@@ -1,4 +1,4 @@
-const captcha = require('../day1/captcha');
+const captcha = require('../day01/captcha');
 
 describe('Day 1: Inverse Captcha', () => {
 

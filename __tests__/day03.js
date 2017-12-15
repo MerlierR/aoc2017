@@ -1,7 +1,7 @@
-const manhattanDistance = require('../day3/manhattanDistance');
-const { getEdgeIndex } = require('../day3/storageDriver');
-const { adjecentSum, getIndices } = require('../day3/adjecentSum');
-const EdgeIndex = require('../day3/EdgeIndex');
+const manhattanDistance = require('../day03/manhattanDistance');
+const { getEdgeIndex } = require('../day03/storageDriver');
+const { adjecentSum, getIndices } = require('../day03/adjecentSum');
+const EdgeIndex = require('../day03/EdgeIndex');
 
 describe('Day 3: Experimental Storage', () => {
     describe('Part 1: Manhattan Distance', () => {

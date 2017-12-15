@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
-const Tower = require('../day7/tower');
+const Tower = require('../day07/tower');
 
 describe('Day 7', () => {
 
     it('can get the root of the tower', () => {
-        const filePath = path.join(__dirname, 'day7.txt');
+        const filePath = path.join(__dirname, 'day07.txt');
         expect(fs.existsSync(filePath));
 
         const input = fs.readFileSync(filePath, 'utf8').split('\n');
@@ -17,7 +17,7 @@ describe('Day 7', () => {
     });
 
     it('can find the unbalanced tower', () => {
-        const filePath = path.join(__dirname, 'day7.txt');
+        const filePath = path.join(__dirname, 'day07.txt');
         const input = fs.readFileSync(filePath, 'utf8').split('\n');
         const tower = Tower.fromConfig(input);
 

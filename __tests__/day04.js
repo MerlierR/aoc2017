@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { isValid, isValidFile, anagramWordValidation } = require('../day4/passphrase');
+const { isValid, isValidFile, anagramWordValidation } = require('../day04/passphrase');
 
 describe('Day 4: Passphrases', () => {
     describe('Part 1', () => {
@@ -13,7 +13,7 @@ describe('Day 4: Passphrases', () => {
         }));
 
         it('Can check the validity of a file', async () => {
-            const filePath = path.join(__dirname, 'day4.passphrases.txt');
+            const filePath = path.join(__dirname, 'day04.passphrases.txt');
             expect(fs.existsSync(filePath)).toBe(true);
 
             const result = await isValidFile(filePath);

@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const { checksum, checksumRow } = require('../day2/checksum');
-const { evenlyDivisibleValues, evenlyDivisibleValuesRow } = require('../day2/evenlyDivisibleValues');
-const fileOperation = require('../day2/fileOperation');
+const { checksum, checksumRow } = require('../day02/checksum');
+const { evenlyDivisibleValues, evenlyDivisibleValuesRow } = require('../day02/evenlyDivisibleValues');
+const fileOperation = require('../day02/fileOperation');
 
 describe('Day 2: Checksum', () => {
 
@@ -24,7 +24,7 @@ describe('Day 2: Checksum', () => {
         });
 
         it('can read and parse a file', async () => {
-            const filePath = path.join(__dirname, 'day2.minmax.txt');
+            const filePath = path.join(__dirname, 'day02.minmax.txt');
 
             expect(fs.existsSync(filePath)).toBe(true);
 
@@ -52,7 +52,7 @@ describe('Day 2: Checksum', () => {
         });
 
         it('can read and parse a file', async () => {
-            const filePath = path.join(__dirname, 'day2.evenly-divisible-values.txt');
+            const filePath = path.join(__dirname, 'day02.evenly-divisible-values.txt');
 
             expect(fs.existsSync(filePath)).toBe(true);
             expect(await fileOperation(filePath, evenlyDivisibleValuesRow)).toBe(9);

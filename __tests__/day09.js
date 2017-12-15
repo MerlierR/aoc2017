@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const Stream = require('../day9/stream');
+const Stream = require('../day09/stream');
 
 describe('Day 9', () => {
 

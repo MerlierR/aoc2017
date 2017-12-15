@@ -1,4 +1,4 @@
-const Memory = require('../day6/memory');
+const Memory = require('../day06/memory');
 
 describe('Day 6', () => {
     describe('Part 1', () => {
