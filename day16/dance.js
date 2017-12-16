@@ -6,20 +6,42 @@ const startPositions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', '
 function dance(/**string*/ input, numberOfIterations = 1, positions = [...startPositions]) {
     const tableLength = positions.length;
     const helpingTable = new Array(tableLength);
+    const moves = getMoves(input, tableLength, helpingTable);
 
+    const { cycle, offset, offsets } = findCycle();
+
+    if (numberOfIterations < offset) return offsets[i];
+    else return cycle[(numberOfIterations - offset) % cycle.length];
+
+    function findCycle() {
+        const remember = [positions.join('')];
+        let hasCycle = false;
+        let currentHash;
+
+        while (!hasCycle) {
+            moves.forEach((move) => move(positions));
+            currentHash = positions.join('');
+
+            if (remember.includes(currentHash)) {
+                hasCycle = true;
+            } else {
+                remember.push(currentHash);
+            }
+        }
+
+        const offset = remember.indexOf(currentHash);
+        const cycle = remember.splice(offset);
+
+        return { cycle, offset, offsets: remember };
+    }
+}
+
+function getMoves(input, tableLength, helpingTable) {
     const moves = [];
     for (let nextMove of parseMoves(input, tableLength, helpingTable)) moves.push(nextMove);
 
-    let i;
-    for (i = 0; i < numberOfIterations; i += 1) {
-        if (dance.logFunction) dance.logFunction(i);
-        moves.forEach((move) => move(positions));
-    }
-
-    return positions;
+    return moves;
 }
-
-dance.logFunction = () => {};
 
 function* parseMoves(/**string*/ input, tableLength, helpingTable) {
     let startPosition = 0;
@@ -38,9 +60,11 @@ function getMove(input, tableLength, helpingTable) {
         case 's':
             return (positions) => spin(positions, parseInt(input.slice(1), 10), tableLength, helpingTable);
         case 'x':
-            return (positions) => exchange(positions, ...input.slice(1).split('/').map((n) => parseInt(n, 10)));
+            const argsx = input.slice(1).split('/').map((n) => parseInt(n, 10));
+            return (positions) => exchange(positions, ...argsx);
         case 'p':
-            return (positions) => partner(positions, ...input.slice(1).split('/'));
+            let argsp = input.slice(1).split('/');
+            return (positions) => partner(positions, ...argsp);
     }
 }
 
