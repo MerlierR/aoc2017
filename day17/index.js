@@ -1,5 +1,5 @@
 const program = require('commander');
-const { spinLock } = require('./spinLock');
+const { spinLock, spinLockAtPosition1 } = require('./spinLock');
 const DEFAULT_INPUT = 355;
 
 program
@@ -11,3 +11,4 @@ const input = program.input || DEFAULT_INPUT;
 const { buffer, position } = spinLock(input);
 
 console.log(buffer[position], buffer[(position + 1) % buffer.length]);
+console.log(spinLockAtPosition1(input));

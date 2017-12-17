@@ -1,4 +1,4 @@
-const { spinLock } = require('../day17/spinLock');
+const { spinLock, spinLockAtPosition1 } = require('../day17/spinLock');
 
 describe('Day 17: SpinLock', () => {
     const input = 3;
@@ -8,5 +8,12 @@ describe('Day 17: SpinLock', () => {
 
         expect(buffer[position]).toBe(2017);
         expect(buffer[(position + 1) % buffer.length]).toBe(638);
+    });
+
+    it(`can find the value at position 1 without calculating the whole spinLock`, () => {
+        const { buffer } = spinLock(input, 2017);
+        const result = spinLockAtPosition1(input, 2017);
+
+        expect(result).toBe(buffer[1]);
     });
 });
