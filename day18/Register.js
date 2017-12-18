@@ -5,6 +5,10 @@ module.exports = class Register {
         this.value = value;
     }
 
+    set(value) {
+        this.value = value;
+    }
+
     add(/**number*/ value) {
         this.value += value;
     }

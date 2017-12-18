@@ -1,12 +1,20 @@
+const EventEmitter = require('events');
+
 const Register = require('./Register');
 
-class InstructionSet {
+class InstructionSet extends EventEmitter {
 
-    constructor() {
+    /// Construction
+    constructor(/**number*/ name) {
+        super();
+
+        this.name = name;
+        this.waiting = false;
+
         /**@private*/ this.currentIndex = 0;
         /**@private*/ this.instructions = null;
         /**@private*/ this.registers = [];
-        /**@private*/ this.lastPlayedFrequency = null;
+        /**@private*/ this.queue = [];
     }
 
     withInstructions(instructions) {
@@ -14,46 +22,70 @@ class InstructionSet {
         return this;
     }
 
-    * execute() {
+    withSender(/**InstructionSet*/ sender) {
+        this.sender = sender;
+        this.sender.on('send', (value) => {
+            this.queue.push(value);
+            this.waiting = false;
+        });
+
+        return this;
+    }
+
+    hasDeadLock() {
+        return this.waiting && this.sender.waiting;
+    }
+
+    /// Execution
+    async execute() {
         this.currentIndex = 0;
-        const l = this.instructions.length;
+        let numberOfSends = 0;
 
-        while (this.currentIndex < l) {
+        while (true) {
             const instruction = this.instructions[this.currentIndex];
-            const result = instruction.fn();
+
+            if (instruction.name === 'snd') numberOfSends += 1;
+            if (instruction.name === 'rcv' && this.queue.length === 0) {
+                this.emit('waiting');
+                this.waiting = true;
+            }
+            if (this.hasDeadLock()) break;
+
+            await instruction.fn();
             this.currentIndex += 1;
-
-            if (instruction.name === 'rcv' && result) yield result;
-        }
-    }
-
-    getValue(value) {
-        const valueAsInt = parseInt(value, 10);
-        if (isNaN(valueAsInt)) return this.findRegister(value).value;
-        return valueAsInt;
-    }
-
-    findRegister(/**string*/ name) {
-        const register = this.registers.find((r) => r.name === name);
-
-        if (!register) {
-            const newRegister = new Register(name, 0);
-            this.registers.push(newRegister);
-            return newRegister;
         }
 
-        return register;
+        this.sender.removeAllListeners('waiting');
+        this.sender.removeAllListeners('send');
+        return numberOfSends;
     }
 
-    playSound(value) {
-        this.lastPlayedFrequency = this.getValue(value);
-        return this.lastPlayedFrequency;
+    // Communication
+    send(value) {
+        this.emit('send', this.getValue(value));
     }
 
+    async receive(/**string*/ name) {
+        if (this.waiting) {
+            await new Promise((res) => {
+                this.sender.once('waiting', () => {
+                    // Waiting event, going into deadlock
+                    this.sender.removeAllListeners('send');
+                    res();
+                });
+                this.sender.once('send', (...args) => {
+                    this.sender.removeAllListeners('waiting');
+                    res();
+                });
+            });
+        }
+
+        if (this.queue.length > 0) this.set(name, this.queue.shift());
+    }
+
+    //<editor-fold desc="Instructions">
     set(/**string*/ name, value) {
-        const register = this.findRegister(name);
-
-        register.value = this.getValue(value);
+        this.findRegister(name).set(this.getValue(value));
     }
 
     add(/**string*/ name, value) {
@@ -68,23 +100,50 @@ class InstructionSet {
         this.findRegister(name).mod(this.getValue(value));
     }
 
-    recover(/**number*/ value) {
-        if (this.getValue(value) === 0) return;
-        return this.lastPlayedFrequency;
-    }
-
-    jumpIfGreaterThanZero(/**number*/ value, /**number*/ offset) {
+    jumpIfGreaterThanZero(value, offset) {
         if (this.getValue(value) > 0) {
             // - 1: executing instructions will automatically add 1 to the current index
-            this.currentIndex += offset - 1;
+            this.currentIndex += this.getValue(offset) - 1;
         }
     }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Helpers">
+
+    /**@private*/
+    getValue(value) {
+        const valueAsInt = parseInt(value, 10);
+
+        if (!isNaN(valueAsInt)) return valueAsInt;
+        else return this.findRegister(value).value;
+    }
+
+    /**@private*/
+    findRegister(/**string*/ name) {
+        const register = this.registers.find((r) => r.name === name);
+
+        if (!register) {
+            const newRegister = new Register(name, this.name);
+            this.registers.push(newRegister);
+            return newRegister;
+        }
+
+        return register;
+    }
+
+    //</editor-fold>
 }
 
 
 InstructionSet.parseInput = (/**string[]*/ input) => {
-    const is = new InstructionSet();
-    return is.withInstructions(input.map((i) => parseInstruction(i, is)));
+    const isA = new InstructionSet(0);
+    const isB = new InstructionSet(1);
+
+    isA.withInstructions(input.map((i) => parseInstruction(i, isA))).withSender(isB);
+    isB.withInstructions(input.map((i) => parseInstruction(i, isB))).withSender(isA);
+
+    return [isA, isB];
 };
 
 function parseInstruction(/**string*/ input, /**InstructionSet*/ instructionSet) {
@@ -96,7 +155,7 @@ function parseInstruction(/**string*/ input, /**InstructionSet*/ instructionSet)
             const value = args[1];
             return {
                 name: 'snd',
-                fn: instructionSet.playSound.bind(instructionSet, value)
+                fn: instructionSet.send.bind(instructionSet, value)
             };
         }
         case 'set': {
@@ -135,12 +194,12 @@ function parseInstruction(/**string*/ input, /**InstructionSet*/ instructionSet)
             const value = args[1];
             return {
                 name: 'rcv',
-                fn: instructionSet.recover.bind(instructionSet, value)
+                fn: instructionSet.receive.bind(instructionSet, value)
             };
         }
         case 'jgz': {
             const value = args[1];
-            const offset = parseInt(args[2], 10);
+            const offset = args[2];
             return {
                 name: 'jgz',
                 fn: instructionSet.jumpIfGreaterThanZero.bind(instructionSet, value, offset)

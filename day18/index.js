@@ -10,6 +10,12 @@ program
 const fileName = program.args[0];
 const data = fs.readFileSync(path.join(process.cwd(), fileName), 'utf8').split('\n');
 
-const instructionSet = InstructionSet.parseInput(data);
-const generator = instructionSet.execute();
-console.log(generator.next().value);
+const [isA, isB] = InstructionSet.parseInput(data);
+
+(async () => {
+    const [nsA, nsB] = await Promise.all([isA.execute(), isB.execute()]);
+
+    console.log(nsA, nsB);
+
+    process.exit(1);
+})();
