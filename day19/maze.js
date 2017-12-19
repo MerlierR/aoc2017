@@ -13,14 +13,14 @@ class Direction {
         this.knownCrossRoads.push({ x, y });
 
         if (this.dX !== 0) {
-            if (y + 1 < lines[x].length && !charIsEmpty(lines[x][y + 1]))
+            if (coordinatesInBounds(lines, x, y + 1) && !charIsEmpty(lines[x][y + 1]))
                 return new Direction(0, 1, this.knownCrossRoads); //RIGHT
-            if (y - 1 >= 0 && !charIsEmpty(lines[x][y - 1]))
+            if (coordinatesInBounds(lines, x, y - 1) && !charIsEmpty(lines[x][y - 1]))
                 return new Direction(0, -1, this.knownCrossRoads); // LEFT
         } else if (this.dY !== 0) {
-            if (x + 1 < lines.length && !charIsEmpty(lines[x + 1][y]))
+            if (coordinatesInBounds(lines, x + 1, y) && !charIsEmpty(lines[x + 1][y]))
                 return new Direction(1, 0, this.knownCrossRoads); //DOWN
-            if (x - 1 >= 0 && !charIsEmpty(lines[x - 1][y]))
+            if (coordinatesInBounds(lines, x - 1, y) && !charIsEmpty(lines[x - 1][y]))
                 return new Direction(-1, 0, this.knownCrossRoads); //UP
         }
 
@@ -35,7 +35,7 @@ function followMaze(/**string*/ input) {
     let chars = '';
     let x = 0, y = lines[0].indexOf('|'), direction = new Direction(1, 0);
 
-    while (direction && x >= 0 && x < lines.length && y >= 0 && y < lines[x].length) {
+    while (direction && coordinatesInBounds(lines, x, y)) {
         const currentChar = lines[x][y];
 
         if (charIsEmpty(currentChar) || '+' === currentChar) direction = direction.next(lines, x, y);
@@ -48,6 +48,10 @@ function followMaze(/**string*/ input) {
     }
 
     return chars;
+}
+
+function coordinatesInBounds(lines, x, y) {
+    return x >= 0 && x < lines.length && y >= 0 && y < lines[x].length;
 }
 
 function charIsEmpty(char) {
