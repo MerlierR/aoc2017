@@ -33,6 +33,7 @@ function followMaze(/**string*/ input) {
     const characterTest = /[a-zA-Z]/;
 
     let chars = '';
+    let numberOfSteps = 0;
     let x = 0, y = lines[0].indexOf('|'), direction = new Direction(1, 0);
 
     while (direction && coordinatesInBounds(lines, x, y)) {
@@ -44,10 +45,11 @@ function followMaze(/**string*/ input) {
         if (direction) {
             x += direction.dX;
             y += direction.dY;
+            numberOfSteps += 1;
         }
     }
 
-    return chars;
+    return { chars, numberOfSteps };
 }
 
 function coordinatesInBounds(lines, x, y) {

@@ -11,11 +11,15 @@ describe('Day 19: A Series Of Tubes', () => {
     });
 
     it('can follow the path', () => {
-        expect(followMaze(readTestFile())).toBe('ABCDEF');
+        const { chars, numberOfSteps } = followMaze(readTestFile());
+        expect(chars).toBe('ABCDEF');
+        expect(numberOfSteps).toBe(38);
     });
 
     it('can follow the huge path', () => {
-        expect(followMaze(readTestFile('../day19/input.txt'))).toBe('EPYDUXANIT');
+        const { chars, numberOfSteps } = followMaze(readTestFile('../day19/input.txt'));
+        expect(chars).toBe('EPYDUXANIT');
+        expect(numberOfSteps).toBe(17544);
     });
 
 });
