@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 /**
  * Particle path: p[t] = p[0] + t*v[0] + 0.5*t*(t+1)*a[0]
  * ~> x collide if pathA[t] = pathB[t]
