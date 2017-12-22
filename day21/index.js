@@ -10,4 +10,4 @@ const fileName = program.args[0];
 const data = fs.readFileSync(path.join(process.cwd(), fileName), 'utf8');
 
 const rules = parseRules(data);
-console.log(processArt(rules, 5));
+console.log(processArt(rules, 18));
