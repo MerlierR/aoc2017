@@ -1,7 +1,7 @@
 const matrix = require('numbers').matrix;
 
 class Rule {
-    constructor(/**number[][]*/ from, /**number[][]*/ to) {
+    constructor(from, to) {
         const rRow = matrix.reverseRows(from);
         const rCol = matrix.reverseCols(from);
         const rRowCol = matrix.reverseCols(rRow);
@@ -13,7 +13,7 @@ class Rule {
             rRowCol.join(), matrix.transpose(rRowCol).join()
         ];
 
-        this._to = to.join().split(',');
+        this.to = to.join().split(',');
     }
 
     match(input) {
@@ -22,10 +22,6 @@ class Rule {
 
     mMatch(matcher, matrixAsList) {
         return matcher === matrixAsList.join();
-    }
-
-    get to() {
-        return matrix.deepCopy(this._to);
     }
 }
 

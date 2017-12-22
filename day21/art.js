@@ -1,7 +1,8 @@
-const matrix = require('numbers').matrix;
-const parseMatrix = require('./parse').parseMatrix;
+const { isOn, parseMatrix } = require('./parse');
 
 const START_MATRIX_STRING = '.#./..#/###';
+
+// Use an array as matrix
 const START_MATRIX = parseMatrix(START_MATRIX_STRING).join().split(',');
 
 function processArt(/**Rule[]*/ rules, numberOfIterations) {
@@ -12,9 +13,22 @@ function processArt(/**Rule[]*/ rules, numberOfIterations) {
 
         if (size % 2 !== 0 && size % 3 !== 0) continue;
 
+        /**
+         * The size of the matrix
+         */
         const s = (size % 2 === 0) ? 2 : 3;
+
+        /**
+         * The number of parts it can be split in (root)
+         */
         const x = (size % 2 === 0) ? size / 2 : size / 3;
 
+        /**
+         * Split the current matrix in sub matrices
+         * -> rowIndex = the row of the subMatrix
+         * -> colIndex = the col of the subMatrix
+         * => subIndex = the index of the subMatrix (0..x**2-1)
+         */
         const subMatrices = [];
         out.forEach((char, index) => {
             const rowIndex = Math.floor(index / (x * s * s));
@@ -24,15 +38,24 @@ function processArt(/**Rule[]*/ rules, numberOfIterations) {
             subMatrices[subIndex].push(char);
         });
 
+        /**
+         * Transform all subMatrices
+         */
         const transformedMatrices = subMatrices.map((sub) => {
             const ruleIndex = rules.findIndex((rule) => rule.match(sub));
-            if (ruleIndex === -1) throw new Error('Computer sais no');
             return rules[ruleIndex].to;
         });
 
+        /**
+         * nS = the size of a transformed subMatrix
+         */
         const nS = getSize(transformedMatrices[0]);
-        out = [];
 
+        /**
+         * Recalculate the matrix
+         * -> iIndex = index offset for the transformed subMatrix
+         * -> jIndex = index if i === 0
+         */
         transformedMatrices.forEach((m, i) => {
             m.forEach((char, j) => {
                 const iIndex = (i % x) * nS + Math.floor(i / x) * x * nS * nS;
@@ -43,11 +66,11 @@ function processArt(/**Rule[]*/ rules, numberOfIterations) {
         });
     }
 
-    return out.reduce((acc, char) => acc + (char === '#' ? 1 : 0), 0);
+    return out.reduce((acc, char) => acc + isOn(char), 0);
 }
 
 function getSize(/**string[]*/ input) {
-    return Math.round(Math.sqrt(input.length));
+    return Math.sqrt(input.length);
 }
 
 module.exports = { processArt };
