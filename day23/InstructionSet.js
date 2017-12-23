@@ -15,6 +15,8 @@ class InstructionSet extends EventEmitter {
         /**@private*/ this.instructions = null;
         /**@private*/ this.registers = [];
         /**@private*/ this.queue = [];
+
+        this.debug = false;
     }
 
     withInstructions(instructions) {
@@ -86,7 +88,10 @@ class InstructionSet extends EventEmitter {
         const register = this.registers.find((r) => r.name === name);
 
         if (!register) {
-            const newRegister = new Register(name, this.pid);
+            let value = this.pid;
+            if (this.debug && name === 'a') value = 1;
+
+            const newRegister = new Register(name, value);
             this.registers.push(newRegister);
             return newRegister;
         }
